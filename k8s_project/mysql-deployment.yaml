@@ -17,9 +17,6 @@ spec:
       containers:
       - name: mysql
         image: blopasmp/mysql:1.0
-        volumeMounts:
-          - name: mysql-storage
-            mountPath: /var/lib/mysql
         ports:
           - containerPort: 3306
       volumes:
