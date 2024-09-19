@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: mysql
-        image: prueba_mysql
+        image: blopasmp/mysql:1.0
         volumeMounts:
           - name: mysql-storage
             mountPath: /var/lib/mysql
@@ -27,3 +27,38 @@ spec:
         hostPath:
           path: ./mysql_db/mysql
           type: Directory
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-script
+data:
+  mysql-init-script.sh: |
+    #!/bin/bash
+    # Este script se ejecutará automáticamente al iniciar el contenedor
+
+    echo "Esperando a que MySQL se inicie..."
+    while ! mysqladmin ping -h "localhost" --silent; do
+        sleep 1
+    done
+
+    echo "MySQL está listo. Configurando la base de datos."
+
+    mysql -uroot -p12345678 <<-EOSQL
+        CREATE DATABASE IF NOT EXISTS db_proyecto;
+        USE db_proyecto;
+        CREATE TABLE IF NOT EXISTS usuario (
+            ID_usuario INT AUTO_INCREMENT PRIMARY KEY,
+            Nombre VARCHAR(100),
+            Apellido VARCHAR(100)
+        );
+
+        INSERT INTO db_proyecto.usuario (ID_usuario, Nombre, Apellido)
+        VALUES (2, 'Carlos', 'Perez');
+
+    EOSQL
+
+    echo "Base de datos y tabla creadas correctamente."
+

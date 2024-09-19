@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: apache
-        image: prueba_apache
+        image: blopasmp/apache:1.0
         volumeMounts:
           - name: apache-files
             mountPath: /var/www/html
